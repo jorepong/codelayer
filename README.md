@@ -156,8 +156,6 @@ cp -R /path/to/codelayer/{CLAUDE.md,.codelayer,.plan} .
   - 개념을 고르면 그 개념을 섹션별로 깊이 설명하고, 구현 유닛을 고르면 그 코드가 *만들어지는 과정*을 시간 순서로 되짚는 **관전 문서**를 씁니다.
 - 원하면 평가(`exercises/`)를 진행하고 — 개념은 이해 확인, 구현 유닛은 직접 생성·검증 — AI가 전역 프로필(`~/.claude/profile/LEARNING_PROFILE.md`)을 갱신합니다.
 
-> Claude Code용 슬래시 커맨드(`/cl-init`, `/cl-plan`, `/cl-learn`, `/cl-profile`, `/cl-done`)가 설치되어 있다면 각 단계를 명령으로도 호출할 수 있습니다. 없어도 `INSTRUCTIONS.md` 규칙만으로 동작합니다.
-
 ---
 
 ## 템플릿 업데이트 관리
