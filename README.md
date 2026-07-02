@@ -43,7 +43,7 @@ CodeLayer는 이 둘을 레이어로 분리합니다.
         │
 ⑥  평가            exercises/ 에 질문(Q)·과제(Ex) — 개념 이해 확인 / 직접 생성·검증 (선택)
         │
-⑦  프로필 갱신       learner_profile/PROFILE.md 에 학습자 역량 반영
+⑦  프로필 갱신       ~/.claude/profile/LEARNING_PROFILE.md (전역 단일 원본) 에 학습자 역량 반영
         │
         └──→ 다음 단계로
 ```
@@ -59,8 +59,6 @@ CodeLayer는 이 둘을 레이어로 분리합니다.
 ├── CLAUDE.md                       ← AI에게 "이 프로젝트는 CodeLayer로 동작한다"고 알리는 진입점
 ├── .codelayer/
 │   ├── INSTRUCTIONS.md             ← CodeLayer 작동 규칙 전문 (프레임워크 본체)
-│   ├── learner_profile/
-│   │   └── PROFILE.md              ← 학습자 프로필 / 지식 베이스 (사람에 대한 기록)
 │   ├── overview/                   ← 단계별 통합 개요 (개념 포인트 + 구현 유닛, 단계 완료 시 생성)
 │   ├── journal/                    ← 구현 일지 (구현 중 누적 · 구현 관전 문서의 원재료)
 │   └── learn/                      ← 학습 문서 (개념 폴더 + 단계별 구현여정 폴더)
@@ -71,7 +69,7 @@ CodeLayer는 이 둘을 레이어로 분리합니다.
 
 빈 디렉토리(`overview/`, `journal/`, `learn/`, `.plan/archive/`)는 `.gitkeep`으로 유지됩니다. 프로젝트를 진행하면 이 안에 학습 자료가 쌓입니다.
 
-`PROFILE.md`는 특정 프로젝트에도 CodeLayer 구조에도 종속되지 않는 **사람 자체에 대한 문서**입니다. 처음에는 빈 템플릿이며, 온보딩과 학습을 거치며 채워집니다. 같은 학습자가 새 프로젝트를 시작할 때 이 파일을 가져오면 이전까지 쌓인 역량 위에서 학습을 이어갈 수 있습니다.
+학습자 프로필은 이 저장소 안이 아니라 **PC의 Claude 전역 폴더 `~/.claude/profile/LEARNING_PROFILE.md`** 한 곳에 둡니다. 특정 프로젝트에도 CodeLayer 구조에도 종속되지 않는 **사람 자체에 대한 문서**로, 모든 프로젝트가 같은 경로로 이 한 파일을 읽고 갱신합니다 — 한 곳에서 역량이 갱신되면 다른 프로젝트에서도 최신입니다(single source of truth). 없으면 온보딩으로 만들어지고, 이미 채워져 있으면 온보딩 없이 그 위에서 학습을 이어갑니다.
 
 ---
 
@@ -96,7 +94,7 @@ cp -R /path/to/codelayer/{CLAUDE.md,.codelayer,.plan} .
 
 프로젝트 루트에서 Claude Code를 엽니다. AI는 `CLAUDE.md`를 통해 `INSTRUCTIONS.md`를 읽고 CodeLayer 진행자가 됩니다.
 
-- `PROFILE.md`가 비어 있으면 **온보딩**(주력 스택·경력·학습 목표 질문)부터 시작합니다.
+- 전역 프로필(`~/.claude/profile/LEARNING_PROFILE.md`)이 없으면 **온보딩**(주력 스택·경력·학습 목표 질문)부터 시작합니다. 이미 채워져 있으면 온보딩을 건너뜁니다.
 - 이후 "무엇을 만들고 싶은지" 말하면 AI가 `.plan/current.md`에 플랜을 작성하고, 승인 후 구현 → 학습 사이클을 반복합니다.
 
 ### 3. 진행 방식
@@ -104,7 +102,7 @@ cp -R /path/to/codelayer/{CLAUDE.md,.codelayer,.plan} .
 - 단계가 끝나면 AI가 `overview/step-N-단계명.md` 한 문서를 만들어, **개념 학습 포인트**(`[N]`)와 **구현 유닛**(`[U N]`)을 각각의 점수와 함께 알려줍니다.
 - 학습하고 싶은 **항목 번호**를 고르면(개념이든 구현 유닛이든) `learn/` 아래에 학습 문서가 한 장씩 생성됩니다. **"다음"** 으로 다음 장, **"계속"** 으로 끊긴 설명을 잇습니다.
   - 개념을 고르면 그 개념을 섹션별로 깊이 설명하고, 구현 유닛을 고르면 그 코드가 *만들어지는 과정*을 시간 순서로 되짚는 **관전 문서**를 씁니다.
-- 원하면 평가(`exercises/`)를 진행하고 — 개념은 이해 확인, 구현 유닛은 직접 생성·검증 — AI가 `PROFILE.md`를 갱신합니다.
+- 원하면 평가(`exercises/`)를 진행하고 — 개념은 이해 확인, 구현 유닛은 직접 생성·검증 — AI가 전역 프로필(`~/.claude/profile/LEARNING_PROFILE.md`)을 갱신합니다.
 
 > Claude Code용 슬래시 커맨드(`/cl-init`, `/cl-plan`, `/cl-learn`, `/cl-profile`, `/cl-done`)가 설치되어 있다면 각 단계를 명령으로도 호출할 수 있습니다. 없어도 `INSTRUCTIONS.md` 규칙만으로 동작합니다.
 
@@ -116,7 +114,7 @@ cp -R /path/to/codelayer/{CLAUDE.md,.codelayer,.plan} .
 
 **방식 1 — 파일만 덮어쓰기 (간단)**
 
-규칙 파일만 최신으로 교체합니다. 학습 자료(`overview/`, `learn/`, `PROFILE.md`)는 건드리지 않습니다.
+규칙 파일만 최신으로 교체합니다. 학습 자료(`overview/`, `learn/`)는 건드리지 않습니다. (프로필은 전역 파일이라 프로젝트 사본과 무관합니다.)
 
 ```bash
 cd /path/to/learning-project
@@ -134,7 +132,7 @@ git fetch upstream
 git checkout upstream/main -- .codelayer/INSTRUCTIONS.md CLAUDE.md
 ```
 
-> 핵심 원칙: **업데이트는 한 방향(원본 → 사본)으로만 흐릅니다.** 학습 프로젝트에서 쌓인 `overview/`·`learn/`·`PROFILE.md`는 그 프로젝트의 자산이므로 절대 원본으로 되돌려 커밋하지 않습니다. 원본에는 규칙·구조·빈 템플릿만 둡니다.
+> 핵심 원칙: **업데이트는 한 방향(원본 → 사본)으로만 흐릅니다.** 학습 프로젝트에서 쌓인 `overview/`·`learn/`는 그 프로젝트의 자산이므로 절대 원본으로 되돌려 커밋하지 않습니다. 원본에는 규칙·구조·빈 템플릿만 둡니다. (학습자 프로필은 전역 파일 `~/.claude/profile/LEARNING_PROFILE.md` 하나로만 관리되며 저장소에 두지 않습니다.)
 
 ---
 
@@ -144,7 +142,7 @@ git checkout upstream/main -- .codelayer/INSTRUCTIONS.md CLAUDE.md
 |------|------|------------|
 | `CLAUDE.md` | AI 진입점. INSTRUCTIONS를 읽으라고 지시 | 고정 |
 | `.codelayer/INSTRUCTIONS.md` | 작동 규칙 전문 | 프레임워크 (여기서 관리) |
-| `.codelayer/learner_profile/PROFILE.md` | 학습자 역량 기록 | AI (학습 진행하며 갱신) |
+| `~/.claude/profile/LEARNING_PROFILE.md` | 학습자 역량 기록 (전역 단일 원본, 저장소 밖) | AI (학습 진행하며 갱신) |
 | `.codelayer/overview/` | 단계별 통합 개요 (개념 포인트 + 구현 유닛) | AI (단계 완료 시) |
 | `.codelayer/journal/` | 구현 일지 (구현 관전 문서의 원재료) | AI (구현 중) |
 | `.codelayer/learn/` | 학습 문서 (개념 설명 + 구현 관전) | AI (항목 선택 시) |
