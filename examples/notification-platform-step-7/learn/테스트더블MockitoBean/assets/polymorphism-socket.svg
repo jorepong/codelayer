@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 500" font-family="'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowReal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowMock" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <text x="415" y="34" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">같은 호출 한 줄, 꽂힌 구현에 따라 다른 동작 — 다형성</text>
+  <text x="415" y="56" text-anchor="middle" font-size="13" fill="#64748b">호출부는 계약(send)만 알고, 무엇이 실행될지는 런타임에 꽂힌 객체가 정한다</text>
+
+  <!-- caller box -->
+  <rect x="24" y="205" width="216" height="96" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="132" y="232" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">호출부 (벽)</text>
+  <text x="132" y="256" text-anchor="middle" font-size="11.5" fill="#334155">NotificationDispatchService</text>
+  <text x="132" y="283" text-anchor="middle" font-size="12.5" font-family="ui-monospace,Menlo,Consolas,monospace" fill="#0f172a">mailSender.send(...)</text>
+
+  <!-- arrow caller -> socket -->
+  <line x1="240" y1="253" x2="300" y2="253" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- socket = interface -->
+  <rect x="302" y="196" width="180" height="114" rx="10" fill="#f8fafc" stroke="#334155" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="392" y="222" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">«인터페이스 = 계약»</text>
+  <text x="392" y="245" text-anchor="middle" font-size="12" fill="#334155">NotificationMailSender</text>
+  <circle cx="372" cy="272" r="6" fill="#fff" stroke="#334155" stroke-width="1.6"/>
+  <circle cx="412" cy="272" r="6" fill="#fff" stroke="#334155" stroke-width="1.6"/>
+  <text x="392" y="300" text-anchor="middle" font-size="11" font-family="ui-monospace,Menlo,Consolas,monospace" fill="#475569">send(to, subject, body)</text>
+
+  <!-- branch label -->
+  <text x="520" y="150" text-anchor="middle" font-size="11.5" fill="#64748b" font-style="italic">런타임에 정확히 하나가 꽂힌다</text>
+
+  <!-- real -->
+  <line x1="482" y1="240" x2="552" y2="120" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrowReal)"/>
+  <rect x="556" y="86" width="252" height="72" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="568" y="110" font-size="12.5" font-weight="700" fill="#15803d">진짜 · SmtpNotificationMailSender</text>
+  <text x="568" y="128" font-size="11" fill="#166534">@Profile("!test") — 운영</text>
+  <text x="568" y="147" font-size="12" fill="#0f172a">→ 📧 진짜 메일이 나간다</text>
+
+  <!-- fake -->
+  <line x1="482" y1="253" x2="552" y2="253" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="556" y="217" width="252" height="72" rx="9" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="568" y="241" font-size="12.5" font-weight="700" fill="#475569">fake · TestNotificationMailSender</text>
+  <text x="568" y="259" font-size="11" fill="#64748b">@Profile("test") — 테스트 바닥</text>
+  <text x="568" y="278" font-size="12" fill="#0f172a">→ 아무 일도 안 한다 (no-op)</text>
+
+  <!-- mock -->
+  <line x1="482" y1="266" x2="552" y2="386" stroke="#ea580c" stroke-width="1.6" marker-end="url(#arrowMock)"/>
+  <rect x="556" y="352" width="252" height="80" rx="9" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="568" y="376" font-size="12.5" font-weight="700" fill="#c2410c">mock · @MockitoBean</text>
+  <text x="568" y="394" font-size="11" fill="#9a3412">발송 테스트만 이 자리를 덮어씀</text>
+  <text x="568" y="413" font-size="12" fill="#0f172a">→ 호출을 장부에 기록</text>
+  <text x="568" y="428" font-size="11.5" fill="#c2410c">→ verify / times로 심문 가능</text>
+
+  <!-- bottom note: caller line unchanged -->
+  <line x1="132" y1="301" x2="132" y2="345" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="132" y="362" text-anchor="middle" font-size="11.5" fill="#64748b">이 한 줄은 무엇이 꽂혀도</text>에
+  <text x="132" y="379" text-anchor="middle" font-size="11.5" fill="#64748b">한 글자도 안 바뀐다</text>
+</svg>
