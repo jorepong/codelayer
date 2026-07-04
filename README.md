@@ -49,6 +49,10 @@ CodeLayer는 이 둘을 레이어로 분리합니다.
 
 이 모든 절차의 정확한 규칙은 [`.codelayer/INSTRUCTIONS.md`](.codelayer/INSTRUCTIONS.md)에 정의되어 있습니다. AI는 매 세션 시작 시 이 파일과 프로필, 플랜을 읽고 동작합니다.
 
+### 문서를 눈으로 보며 귀로 듣는다 — 낭독과 플레이어
+
+각 학습 문서에는 짝이 되는 낭독 스크립트가 함께 생성됩니다. `.codelayer/scripts/narrate.sh`를 돌리면 그 스크립트가 음성(mp3)으로 렌더되고, 문서·음성·제어를 한자리에 모은 `player.html`이 만들어집니다. 플레이어를 열면 학습 문서가 교재처럼 렌더되고(코드 신택스 하이라이트·Mermaid 다이어그램·콜아웃 카드), 재생 위치에 맞춰 지금 읽는 블록이 하이라이트되며 화면이 따라 스크롤됩니다 — 순수한 글은 문서를 그대로 따라 읽어 주고, 그림·표·코드처럼 소리로 옮길 수 없는 것만 말로 풀어 안내합니다. 배속 조절과, 인출 게이트에서의 자동 멈춤(먼저 스스로 떠올리게 한 뒤 이어감)도 지원합니다. 기본 TTS 엔진은 무료·키 불필요한 edge-tts(한국어 음성)이며, 처음 렌더할 때 전역 `~/.claude/learn/.tts-venv`에 자동 설치됩니다.
+
 ---
 
 ## 산출물 예시 — 실제로 이렇게 나옵니다
@@ -127,9 +131,10 @@ CodeLayer는 이 둘을 레이어로 분리합니다.
 ├── CLAUDE.md                       ← AI에게 "이 프로젝트는 CodeLayer로 동작한다"고 알리는 진입점
 ├── .codelayer/
 │   ├── INSTRUCTIONS.md             ← CodeLayer 작동 규칙 전문 (프레임워크 본체)
+│   ├── scripts/                    ← 낭독 렌더러 (narrate.sh · verify-align.js · vendor/marked.min.js)
 │   ├── overview/                   ← 단계별 통합 개요 (개념 포인트 + 구현 유닛, 단계 완료 시 생성)
 │   ├── journal/                    ← 구현 일지 (구현 중 누적 · 구현 관전 문서의 원재료)
-│   └── learn/                      ← 학습 문서 (개념 폴더 + 단계별 구현여정 폴더)
+│   └── learn/                      ← 학습 문서 (개념·구현여정 폴더 + 동반 낭독 스크립트·음성·player.html)
 ├── .plan/
 │   ├── current.md                  ← 현재 진행 중인 플랜 (프로젝트 시작 시 생성)
 │   └── archive/                    ← 완료된 플랜 보관소
@@ -209,10 +214,12 @@ git checkout upstream/main -- .codelayer/INSTRUCTIONS.md CLAUDE.md
 |------|------|------------|
 | `CLAUDE.md` | AI 진입점. INSTRUCTIONS를 읽으라고 지시 | 고정 |
 | `.codelayer/INSTRUCTIONS.md` | 작동 규칙 전문 | 프레임워크 (여기서 관리) |
+| `.codelayer/scripts/` | 낭독 렌더러 (`narrate.sh` → 음성·`player.html`) | 고정 |
 | `~/.claude/profile/LEARNING_PROFILE.md` | 학습자 역량 기록 (전역 단일 원본, 저장소 밖) | AI (학습 진행하며 갱신) |
+| `~/.claude/learn/` | 낭독 TTS 환경·발음 사전 (전역, 저장소 밖) | `narrate.sh` (자동 설치) · AI (발음 누적) |
 | `.codelayer/overview/` | 단계별 통합 개요 (개념 포인트 + 구현 유닛) | AI (단계 완료 시) |
 | `.codelayer/journal/` | 구현 일지 (구현 관전 문서의 원재료) | AI (구현 중) |
-| `.codelayer/learn/` | 학습 문서 (개념 설명 + 구현 관전) | AI (항목 선택 시) |
+| `.codelayer/learn/` | 학습 문서 (개념 설명 + 구현 관전) + 동반 낭독 스크립트·음성·`player.html` | AI (항목 선택 시) |
 | `.plan/current.md` | 현재 플랜 | AI (프로젝트 시작 시) |
 
 ---
